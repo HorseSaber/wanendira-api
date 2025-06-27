@@ -1,1 +1,0 @@
-# wanendira-api
