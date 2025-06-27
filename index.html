@@ -170,6 +170,15 @@
                     <input type="password" id="apiKeyInput" placeholder="Masukkan API Key Gemini Anda" class="custom-input w-full pl-12 pr-4 py-3 rounded-lg">
                 </div>
                 <p id="apiKeyError" class="text-red-400 text-sm mt-2 hidden">API Key tidak boleh kosong.</p>
+                
+                <!-- NEW: Manual Save Button -->
+                <div class="mt-4 text-right">
+                  <button id="saveApiKeyButton" class="btn-primary px-4 py-2 rounded-md text-sm">
+                    <i class="fa-solid fa-floppy-disk mr-2"></i>Simpan API Key
+                  </button>
+                  <p id="saveConfirmation" class="text-green-400 text-sm mt-2 hidden">✅ API Key berhasil disimpan.</p>
+                </div>
+
                 <p class="text-xs text-slate-500 mt-3 text-center">
                     Kunci API Anda disimpan di browser Anda & tidak pernah dikirim ke server kami.
                 </p>
@@ -236,6 +245,8 @@
         const copyButton = document.getElementById('copyButton');
         const apiKeyError = document.getElementById('apiKeyError');
         const topicError = document.getElementById('topicError');
+        const saveApiKeyButton = document.getElementById('saveApiKeyButton');
+        const saveConfirmation = document.getElementById('saveConfirmation');
 
         // Load and Save API Key from/to localStorage
         const savedApiKey = localStorage.getItem('wanendira_api_key');
@@ -252,6 +263,17 @@
         // --- Event Listeners ---
         generateButton.addEventListener('click', handleGenerate);
         copyButton.addEventListener('click', handleCopy);
+
+        // NEW: Manual Save Button Listener
+        saveApiKeyButton?.addEventListener('click', () => {
+            const key = apiKeyInput.value.trim();
+            if (key) {
+                localStorage.setItem('wanendira_api_key', key);
+                saveConfirmation.classList.remove('hidden');
+                setTimeout(() => saveConfirmation.classList.add('hidden'), 3000);
+            }
+        });
+        
         outputContainer.addEventListener('click', function(e) {
             if (e.target && e.target.tagName === 'LI') {
                 topicInput.value = e.target.textContent;
@@ -260,7 +282,6 @@
         });
 
         // --- Core Functions ---
-
         async function handleGenerate() {
             const apiKey = apiKeyInput.value.trim();
             const userTopic = topicInput.value.trim();
@@ -419,26 +440,4 @@
                         <p class="main-text">${item.kalimat}</p>
                         <p class="narrative-visual-prompt flex items-center gap-2"><i class="fa-solid fa-camera-retro"></i> ${item.prompt_visual}</p>
                     `;
-                    narrativeCard.appendChild(itemDiv);
-                });
-            }
-            outputContainer.appendChild(narrativeCard);
-            copyButton.classList.remove('hidden');
-        }
-
-        function renderError(errorMessage) {
-            // --- REVISED ERROR FUNCTION ---
-            outputSection.classList.remove('hidden');
-            outputContainer.innerHTML = `
-                <div class="bg-red-900/50 text-red-300 p-6 rounded-lg border border-red-700">
-                    <h3 class="font-bold text-lg mb-2">Terjadi Kesalahan</h3>
-                    <p>${errorMessage}</p>
-                    <p class="mt-4 text-sm text-red-400">Pastikan API Key Anda valid dan gunakan topik yang cukup spesifik.</p>
-                </div>
-            `;
-        
-            const suggestions = [
-                "Kenapa kerja keras doang gak bikin lo kaya?",
-                "Cara mikir orang sukses yang jarang dibahas",
-                "Kenapa orang baik sering dimanfaatin?",
-                "Lo pernah ngerasa hidup cuma numpang lewat?
+                    narrati
