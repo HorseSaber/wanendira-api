@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WANENDIRA STORY - Shorts Generator</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Poppins and Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" xintegrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style>
+        /* Custom Styles for a Professional Look */
+        :root {
+            --bg-dark: #0f172a; /* slate-900 */
+            --bg-card: #1e293b; /* slate-800 */
+            --border-color: #334155; /* slate-700 */
+            --text-primary: #f8fafc; /* slate-50 */
+            --text-secondary: #94a3b8; /* slate-400 */
+            --accent-color: #3b82f6; /* blue-600 */
+            --accent-hover: #2563eb; /* blue-700 */
+            --tag-bg: #374151; /* gray-700 */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Hero Animation */
+        @keyframes fadeInZoom {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .animate-fade-in-zoom { animation: fadeInZoom 1s ease-out forwards; }
+
+        /* Custom Input & Button */
+        .custom-input {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+        .custom-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.4);
+        }
+        .btn-primary {
+            background-color: var(--accent-color);
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            transform: translateY(0);
+        }
+        .btn-primary:hover {
+            background-color: var(--accent-hover);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);
+            transform: translateY(-2px);
+        }
+        .btn-primary:disabled {
+            background-color: #334155;
+            cursor: not-allowed;
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        /* Loading Spinner */
+        .loader {
+            width: 48px;
+            height: 48px;
+            border: 5px solid var(--text-primary);
+            border-bottom-color: var(--accent-color);
+            border-radius: 50%;
+            display: inline-block;
+            box-sizing: border-box;
+            animation: rotation 1s linear infinite;
+        }
+        @keyframes rotation {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Output Formatting */
+        .output-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+        }
+        .output-card h4 {
+            color: var(--accent-color);
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .output-card p, .output-card .hashtags-container span {
+            color: var(--text-secondary);
+        }
+         .output-card .main-text {
+            color: var(--text-primary);
+            font-size: 1.1rem;
+         }
+         .suggestion-list li {
+            cursor: pointer;
+            transition: color 0.2s ease-in-out;
+         }
+         .suggestion-list li:hover {
+            color: var(--accent-color);
+         }
+
+        .narrative-item {
+            border-left: 3px solid var(--accent-color);
+            padding-left: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .narrative-type {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 0.125rem 0.5rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+        .narrative-visual-prompt {
+            font-style: italic;
+            font-size: 0.9rem;
+            opacity: 0.7;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 lg:p-8">
+
+    <div class="w-full max-w-4xl mx-auto flex flex-col gap-10">
+
+        <!-- 1. Header Hero Section -->
+        <header class="text-center animate-fade-in-zoom">
+            <h1 class="text-5xl sm:text-6xl md:text-7xl font-extrabold tracking-tight">
+                <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-teal-400">
+                    WANENDIRA STORY
+                </span>
+            </h1>
+            <p class="mt-4 text-lg sm:text-xl text-slate-300">
+                YouTube Shorts Script Generator
+            </p>
+        </header>
+
+        <main class="w-full max-w-3xl mx-auto flex flex-col gap-8">
+            <!-- 2. Input API Key -->
+            <section class="output-card">
+                <h3 class="text-xl font-bold mb-4 text-slate-200">Konfigurasi API</h3>
+                <div class="relative w-full">
+                    <i class="fa-solid fa-key absolute top-1/2 -translate-y-1/2 left-4 text-slate-400"></i>
+                    <input type="password" id="apiKeyInput" placeholder="Masukkan API Key Gemini Anda" class="custom-input w-full pl-12 pr-4 py-3 rounded-lg">
+                </div>
+                <p id="apiKeyError" class="text-red-400 text-sm mt-2 hidden">API Key tidak boleh kosong.</p>
+                <p class="text-xs text-slate-500 mt-3 text-center">
+                    Kunci API Anda disimpan di browser Anda & tidak pernah dikirim ke server kami.
+                </p>
+            </section>
+
+            <!-- 3. Area Generator -->
+            <section class="output-card">
+                <div class="inline-flex items-center gap-2 mb-6">
+                    <span class="text-xl">🎬</span>
+                    <h3 class="text-xl font-bold text-slate-200">Generator Script YouTube Shorts</h3>
+                </div>
+                
+                <div class="flex flex-col gap-4">
+                    <label for="topicInput" class="font-semibold text-slate-300">Topik Utama Video</label>
+                    <textarea id="topicInput" rows="3" class="custom-input w-full p-4 rounded-lg resize-none" placeholder="Contoh: Kenapa kerja keras saja gak cukup buat bebas finansial?"></textarea>
+                    <p id="topicError" class="text-red-400 text-sm mt-0 hidden">Topik tidak boleh kosong.</p>
+                    <button id="generateButton" class="btn-primary w-full py-3 rounded-lg flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        <span>Hasilkan Naskah</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Section Output -->
+            <section id="outputSection" class="hidden">
+                <!-- Loading Spinner -->
+                <div id="loadingSpinner" class="text-center py-10 hidden">
+                    <div class="loader mx-auto"></div>
+                    <p class="mt-4 text-slate-400">Sedang menyusun naskah pemenang...</p>
+                </div>
+
+                <!-- Result Container -->
+                <div id="outputContainer" class="space-y-6">
+                    <!-- Content will be injected here -->
+                </div>
+                 
+                <!-- Copy Button -->
+                <div class="mt-6 text-center">
+                    <button id="copyButton" class="bg-slate-700 text-slate-200 hover:bg-slate-600 transition-colors duration-200 font-semibold py-2 px-6 rounded-lg flex items-center justify-center gap-2 mx-auto hidden">
+                        <i class="fa-solid fa-copy"></i>
+                        <span>Salin Naskah & Deskripsi</span>
+                    </button>
+                </div>
+            </section>
+        </main>
+
+        <!-- 4. Footer -->
+        <footer class="text-center text-slate-500 text-sm pb-4">
+            <p>Ditenagai oleh Google's Gemini 1.5 Flash API.</p>
+            <a href="https://ai.google.dev/docs" target="_blank" rel="noopener noreferrer" class="text-slate-400 hover:text-accent-color transition-colors">
+                Lihat Dokumentasi <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+            </a>
+        </footer>
+    </div>
+
+    <script>
+        // DOM Element References
+        const apiKeyInput = document.getElementById('apiKeyInput');
+        const generateButton = document.getElementById('generateButton');
+        const topicInput = document.getElementById('topicInput');
+        const outputSection = document.getElementById('outputSection');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const outputContainer = document.getElementById('outputContainer');
+        const copyButton = document.getElementById('copyButton');
+        const apiKeyError = document.getElementById('apiKeyError');
+        const topicError = document.getElementById('topicError');
+
+        // Load and Save API Key from/to localStorage
+        const savedApiKey = localStorage.getItem('wanendira_api_key');
+        if (savedApiKey) {
+            apiKeyInput.value = savedApiKey;
+        }
+        apiKeyInput.addEventListener('input', () => {
+            localStorage.setItem('wanendira_api_key', apiKeyInput.value.trim());
+        });
+
+        const API_MODEL = 'gemini-1.5-flash-latest';
+        let currentScriptData = null; 
+
+        // --- Event Listeners ---
+        generateButton.addEventListener('click', handleGenerate);
+        copyButton.addEventListener('click', handleCopy);
+        outputContainer.addEventListener('click', function(e) {
+            if (e.target && e.target.tagName === 'LI') {
+                topicInput.value = e.target.textContent;
+                generateButton.click();
+            }
+        });
+
+        // --- Core Functions ---
+
+        async function handleGenerate() {
+            const apiKey = apiKeyInput.value.trim();
+            const userTopic = topicInput.value.trim();
+
+            let hasError = false;
+            if (!apiKey) { apiKeyError.classList.remove('hidden'); hasError = true; } 
+            else { apiKeyError.classList.add('hidden'); }
+            if (!userTopic) { topicError.classList.remove('hidden'); hasError = true; } 
+            else { topicError.classList.add('hidden'); }
+            if (hasError) return;
+
+            setLoadingState(true);
+            
+            const prompt = buildPrompt(userTopic);
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${API_MODEL}:generateContent?key=${apiKey}`;
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: prompt }] }],
+                        generationConfig: { responseMimeType: "application/json" }
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`API Error: ${errorData.error?.message || 'Unknown error'}`);
+                }
+
+                const result = await response.json();
+                
+                if (result.candidates && result.candidates.length > 0) {
+                    const textContent = result.candidates[0].content.parts[0].text;
+                    const cleanJsonString = textContent.replace(/```json/g, '').replace(/```/g, '').trim();
+                    
+                    let parsedData = null;
+                    try {
+                        parsedData = JSON.parse(cleanJsonString);
+
+                        if (!parsedData.narasi_terstruktur || parsedData.narasi_terstruktur.length < 6) {
+                            throw new Error("Narasi terlalu pendek atau tidak lengkap. Coba tulis topik yang lebih spesifik.");
+                        }
+
+                        const hasCTA = parsedData.narasi_terstruktur.some(item => 
+                            item.tipe.toUpperCase().includes("CTA") || item.tipe.toUpperCase().includes("PENUTUP")
+                        );
+                        if (!hasCTA) {
+                            throw new Error("Narasi belum punya penutup/CTA. Coba ulangi permintaan.");
+                        }
+                        
+                        currentScriptData = parsedData;
+                        renderOutput(parsedData);
+
+                    } catch (parseError) {
+                        console.error("Validation/Parse Error:", parseError.message, "Raw content received:", cleanJsonString);
+                        throw new Error(parseError.message); 
+                    }
+
+                } else {
+                   throw new Error("Tidak ada konten yang dihasilkan. Cek kembali API Key dan permintaan Anda.");
+                }
+
+            } catch (error) {
+                console.error('Caught Final Error:', error);
+                renderError(error.message);
+                currentScriptData = null;
+            } finally {
+                setLoadingState(false);
+            }
+        }
+        
+        function buildPrompt(topic) {
+            return `
+                🎯 TUGAS UTAMA
+                Hasilkan narasi video YouTube Shorts berdurasi maksimal 60 detik, dalam format storytelling yang terstruktur.
+
+                📦 STRUKTUR NARASI YANG HARUS DIBUAT
+                - 🎣 HOOK: 1–2 kalimat pendek. Gaya pertanyaan, pengakuan, atau pembuka yang relatable.
+                - 📖 SEGMEN (6–8 blok): Setiap segmen terdiri dari 1–2 kalimat yang menjelaskan logika, analogi, atau contoh dari topik.
+                - 📣 PENUTUP / CTA: Kalimat penutup yang memberikan ajakan, refleksi, atau dorongan tindakan.
+
+                🎙️ GAYA BAHASA: Alpha Gentle – Naratif Dialogis Maskulin
+                - Persona: Pria dewasa bijak, tenang, dan maskulin — seperti kakak laki-laki (big brother) yang sedang ngobrol empat mata secara jujur dan santai.
+                - Ciri Khas:
+                    - Gunakan sapaan langsung seperti: “bro”, “lo”, “gue”.
+                    - Kalimat pendek, jujur, dan terasa personal.
+                    - Banyak memakai analogi kehidupan, logika sehari-hari, dan pertanyaan reflektif.
+                    - Tidak puitis. Tidak formal. Tidak seperti naskah pidato.
+                
+                📝 TOPIK:
+                "${topic}"
+
+                ⛔ ATURAN PENTING:
+                - Jangan buat seperti puisi, kutipan, atau kalimat afirmasi.
+                - Panjang total narasi harus mencukupi 55–60 detik saat dibacakan.
+                - Hindari kalimat pasif dan pembuka klise seperti: “Dalam hidup ini...” atau “Terkadang kita...”
+                - Mulai langsung dengan gaya seperti: “Bro, lo pernah ngerasa...”
+                - Tambahkan prompt visual pendek untuk setiap kalimat (bukan deskripsi panjang).
+                - Output WAJIB dalam struktur JSON yang valid, tanpa markdown.
+
+                📤 OUTPUT DALAM STRUKTUR JSON BERIKUT:
+                {
+                  "judul_seo": "....",
+                  "deskripsi_video": "....",
+                  "hashtags": "....",
+                  "tags_meta": "....",
+                  "kalimat_thumbnail": "....",
+                  "narasi_terstruktur": [
+                    { "tipe": "HOOK", "kalimat": "....", "prompt_visual": "...." },
+                    { "tipe": "SEGMEN", "kalimat": "....", "prompt_visual": "...." },
+                    { "tipe": "PENUTUP/CTA", "kalimat": "....", "prompt_visual": "...." }
+                  ]
+                }
+            `;
+        }
+        
+        function renderOutput(data) {
+            outputSection.classList.remove('hidden'); 
+            outputContainer.innerHTML = ''; // Clear previous content
+
+            const thumbnailCard = document.createElement('div');
+            thumbnailCard.className = 'output-card text-center';
+            thumbnailCard.innerHTML = `
+                <h4>IDE TEKS THUMBNAIL</h4>
+                <p class="main-text font-extrabold text-2xl tracking-wider uppercase">${data.kalimat_thumbnail || 'Tidak ada'}</p>`;
+            outputContainer.appendChild(thumbnailCard);
+            
+            const metaCard = document.createElement('div');
+            metaCard.className = 'output-card';
+            metaCard.innerHTML = `
+                <h4>SEO & META</h4>
+                <p class="font-semibold text-slate-300">Judul Video:</p>
+                <p class="mb-4">${data.judul_seo || ''}</p>
+                <p class="font-semibold text-slate-300">Deskripsi:</p>
+                <p class="mb-4 whitespace-pre-wrap">${data.deskripsi_video || ''}</p>
+                <p class="font-semibold text-slate-300">Hashtags:</p>
+                <p class="mb-4">${data.hashtags || ''}</p>
+                <p class="font-semibold text-slate-300">Tags/Keywords:</p>
+                <p>${data.tags_meta || ''}</p>`;
+            outputContainer.appendChild(metaCard);
+
+            const narrativeCard = document.createElement('div');
+            narrativeCard.className = 'output-card';
+            const narrativeTitle = document.createElement('h4');
+            narrativeTitle.textContent = 'NASKAH VIDEO';
+            narrativeCard.appendChild(narrativeTitle);
+
+            if (data.narasi_terstruktur && data.narasi_terstruktur.length > 0) {
+                data.narasi_terstruktur.forEach(item => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'narrative-item';
+                    itemDiv.innerHTML = `
+                        <span class="narrative-type">${item.tipe}</span>
+                        <p class="main-text">${item.kalimat}</p>
+                        <p class="narrative-visual-prompt flex items-center gap-2"><i class="fa-solid fa-camera-retro"></i> ${item.prompt_visual}</p>
+                    `;
+                    narrativeCard.appendChild(itemDiv);
+                });
+            }
+            outputContainer.appendChild(narrativeCard);
+            copyButton.classList.remove('hidden');
+        }
+
+        function renderError(errorMessage) {
+            // --- REVISED ERROR FUNCTION ---
+            outputSection.classList.remove('hidden');
+            outputContainer.innerHTML = `
+                <div class="bg-red-900/50 text-red-300 p-6 rounded-lg border border-red-700">
+                    <h3 class="font-bold text-lg mb-2">Terjadi Kesalahan</h3>
+                    <p>${errorMessage}</p>
+                    <p class="mt-4 text-sm text-red-400">Pastikan API Key Anda valid dan gunakan topik yang cukup spesifik.</p>
+                </div>
+            `;
+        
+            const suggestions = [
+                "Kenapa kerja keras doang gak bikin lo kaya?",
+                "Cara mikir orang sukses yang jarang dibahas",
+                "Kenapa orang baik sering dimanfaatin?",
+                "Lo pernah ngerasa hidup cuma numpang lewat?
